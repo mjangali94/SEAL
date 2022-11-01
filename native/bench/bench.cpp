@@ -18,12 +18,21 @@ namespace sealbench
     If more runs are needed for more accurate measurements, either remove line 26, or run benchmarks in repetition.
     */
 #define SEAL_BENCHMARK_REGISTER(category, n, log_q, name, func, ...)                                                  \
-    RegisterBenchmark(                                                                                                \
+    benchmark::RegisterBenchmark(                                                                                                \
         (string("n=") + to_string(n) + string(" / log(q)=") + to_string(log_q) + string(" / " #category " / " #name)) \
             .c_str(),                                                                                                 \
-        [=](State &st) { func(st, __VA_ARGS__); })                                                                    \
+        [=](benchmark::State &st) { func(st, __VA_ARGS__); })                                                                    \
         ->Unit(benchmark::kMicrosecond)                                                                               \
         ->Iterations(10);
+
+#define SEAL_BENCHMARK_REGISTER_2(category, n, log_q, name, func)                                                  \
+    benchmark::RegisterBenchmark(                                                                                                \
+        (string("n=") + to_string(n) + string(" / log(q)=") + to_string(log_q) + string(" / " #category " / " #name)) \
+            .c_str(),                                                                                                 \
+        [=](benchmark::State &st) { func(st); })                                                                    \
+        ->Unit(benchmark::kMicrosecond)                                                                               \
+        ->Iterations(10);
+
 
     void register_bm_family(
         const pair<size_t, vector<Modulus>> &parms, unordered_map<EncryptionParameters, shared_ptr<BMEnv>> &bm_env_map)
@@ -151,6 +160,12 @@ namespace sealbench
         SEAL_BENCHMARK_REGISTER(UTIL, n, 0, NTTInverseLowLevelLazy, bm_util_ntt_inverse_low_level_lazy, bm_env_bfv);
     }
 
+        void register_bm_family_2()
+    {
+       
+        SEAL_BENCHMARK_REGISTER_2(batchencoderbench, 0, 0, BatchEncoderTest_BatchUnbatchUIntVector_benchName, BatchEncoderTest_BatchUnbatchUIntVector);
+    }
+
 } // namespace sealbench
 
 int main(int argc, char **argv)
@@ -208,12 +223,13 @@ int main(int argc, char **argv)
          << "Total allocation from the memory pool" << endl;
 
     // For each parameter set in bm_parms_vec, register a family of benchmark cases.
-    for (auto &i : bm_parms_vec)
-    {
-        sealbench::register_bm_family(i, bm_env_map);
-    }
+    // for (auto &i : bm_parms_vec)
+    // {
+    //     sealbench::register_bm_family(i, bm_env_map);
+    // }
 
-    RunSpecifiedBenchmarks();
+    sealbench::register_bm_family_2();
+    benchmark::RunSpecifiedBenchmarks();
 
     // After running all benchmark cases, we print again the total memory consumption by SEAL memory pool.
     // This value should be larger than the previous amount but not by much.
