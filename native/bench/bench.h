@@ -33,7 +33,7 @@ namespace sealbench
         // Allow insecure parameters for experimental purposes.
         // DO NOT USE THIS AS AN EXAMPLE.
         BMEnv(const seal::EncryptionParameters &parms)
-            : parms_(parms), context_(parms_, true, seal::sec_level_type::none)
+        : parms_(parms), context_(parms_, true, seal::sec_level_type::none)
         {
             keygen_ = std::make_shared<seal::KeyGenerator>(context_);
             sk_ = keygen_->secret_key();
@@ -417,6 +417,368 @@ namespace sealbench
     void bm_ckks_relin_inplace(benchmark::State &state, std::shared_ptr<BMEnv> bm_env);
     void bm_ckks_rotate(benchmark::State &state, std::shared_ptr<BMEnv> bm_env);
 
-    //batchencoder.cpp benchmarks
-    void BatchEncoderTest_BatchUnbatchUIntVector(benchmark::State &state);
+
+
 } // namespace sealbench
+
+
+
+namespace gtest2gbenchmark{
+
+    //batchencoder.cpp gtest2gbenchmark benchmarks
+    void BatchEncoderTest_BatchUnbatchUIntVector(benchmark::State &state);
+    void BatchEncoderTest_BatchUnbatchIntVector(benchmark::State &state);
+
+    //ciphertext.cpp gtest2gbenchmark benchmarks
+    void CiphertextTest_BFVCiphertextBasics(benchmark::State &state);
+    void CiphertextTest_BFVSaveLoadCiphertext(benchmark::State &state);
+    void CiphertextTest_BGVCiphertextBasics(benchmark::State &state);
+    void CiphertextTest_BGVSaveLoadCiphertext(benchmark::State &state);
+
+    // ckks.cpp gtest2gbenchmark benchmark 
+    void CKKSEncoderTest_CKKSEncoderEncodeVectorDecodeTest(benchmark::State &state);
+    void CKKSEncoderTest_CKKSEncoderEncodeSingleDecodeTest(benchmark::State &state);
+
+    // context.cpp gtest2gbenchmark benchmark 
+    void ContextTest_BFVContextConstructor(benchmark::State &state);
+    void ContextTest_ModulusChainExpansion(benchmark::State &state);
+    void EncryptionParameterQualifiersTest_BFVParameterError(benchmark::State &state);
+    void ContextTest_BGVContextConstructor(benchmark::State &state);
+    void EncryptionParameterQualifiersTest_BGVParameterError(benchmark::State &state);
+
+    // dynarray.cpp gtest2gbenchmark benchmark 
+    void DynArrayTest_DynArrayBasics(benchmark::State &state);
+    void DynArrayTest_FromSpan(benchmark::State &state);
+    void DynArrayTest_SaveLoadDynArray(benchmark::State &state);
+    void DynArrayTest_Assign(benchmark::State &state);
+
+    // encryptionparams.cpp gtest2gbenchmark benchmark 
+    void EncryptionParametersTest_EncryptionParametersSet(benchmark::State &state);
+    void EncryptionParametersTest_EncryptionParametersCompare(benchmark::State &state);
+    void EncryptionParametersTest_EncryptionParametersSaveLoad(benchmark::State &state);
+
+    // encryptor.cpp gtest2gbenchmark benchmark 
+    void EncryptorTest_BFVEncryptDecrypt(benchmark::State &state);
+    void EncryptorTest_BFVEncryptZeroDecrypt(benchmark::State &state);
+    void EncryptorTest_CKKSEncryptZeroDecrypt(benchmark::State &state);
+    void EncryptorTest_CKKSEncryptDecrypt(benchmark::State &state);
+    void EncryptorTest_BGVEncryptDecrypt(benchmark::State &state);
+    void EncryptorTest_BGVEncryptZeroDecrypt(benchmark::State &state);
+
+    // evaluator.cpp gtest2gbenchmark benchmark 
+    void EvaluatorTest_BFVEncryptNegateDecrypt(benchmark::State &state);
+    void EvaluatorTest_BFVEncryptAddDecrypt(benchmark::State &state);
+    void EvaluatorTest_BGVEncryptNegateDecrypt(benchmark::State &state);
+    void EvaluatorTest_BGVEncryptAddDecrypt(benchmark::State &state);
+    void EvaluatorTest_CKKSEncryptAddDecrypt(benchmark::State &state);
+    void EvaluatorTest_CKKSEncryptAddPlainDecrypt(benchmark::State &state);
+    void EvaluatorTest_CKKSEncryptSubPlainDecrypt(benchmark::State &state);
+    void EvaluatorTest_BFVEncryptSubDecrypt(benchmark::State &state);
+    void EvaluatorTest_BFVEncryptAddPlainDecrypt(benchmark::State &state);
+    void EvaluatorTest_BFVEncryptSubPlainDecrypt(benchmark::State &state);
+    void EvaluatorTest_BFVEncryptMultiplyPlainDecrypt(benchmark::State &state);
+    void EvaluatorTest_BFVEncryptMultiplyDecrypt(benchmark::State &state);
+    void EvaluatorTest_BGVEncryptSubDecrypt(benchmark::State &state);
+    void EvaluatorTest_BGVEncryptAddPlainDecrypt(benchmark::State &state);
+    void EvaluatorTest_BGVEncryptSubPlainDecrypt(benchmark::State &state);
+    void EvaluatorTest_BGVEncryptMultiplyPlainDecrypt(benchmark::State &state);
+    void EvaluatorTest_BGVEncryptMultiplyDecrypt(benchmark::State &state);
+    void EvaluatorTest_BFVRelinearize(benchmark::State &state);
+    void EvaluatorTest_BGVRelinearize(benchmark::State &state);
+    void EvaluatorTest_CKKSEncryptNaiveMultiplyDecrypt(benchmark::State &state);
+    void EvaluatorTest_CKKSEncryptMultiplyByNumberDecrypt(benchmark::State &state);
+    void EvaluatorTest_CKKSEncryptMultiplyRelinDecrypt(benchmark::State &state);
+    void EvaluatorTest_CKKSEncryptSquareRelinDecrypt(benchmark::State &state);
+    void EvaluatorTest_CKKSEncryptMultiplyRelinRescaleDecrypt(benchmark::State &state);
+    void EvaluatorTest_CKKSEncryptSquareRelinRescaleDecrypt(benchmark::State &state);
+    void EvaluatorTest_CKKSEncryptModSwitchDecrypt(benchmark::State &state);
+    void EvaluatorTest_CKKSEncryptMultiplyRelinRescaleModSwitchAddDecrypt(benchmark::State &state);
+    void EvaluatorTest_CKKSEncryptRotateDecrypt(benchmark::State &state);
+    void EvaluatorTest_CKKSEncryptRescaleRotateDecrypt(benchmark::State &state);
+    void EvaluatorTest_BFVEncryptSquareDecrypt(benchmark::State &state);
+    void EvaluatorTest_BFVEncryptMultiplyManyDecrypt(benchmark::State &state);
+    void EvaluatorTest_BFVEncryptExponentiateDecrypt(benchmark::State &state);
+    void EvaluatorTest_BFVEncryptAddManyDecrypt(benchmark::State &state);
+    void EvaluatorTest_BGVEncryptSquareDecrypt(benchmark::State &state);
+    void EvaluatorTest_BGVEncryptMultiplyManyDecrypt(benchmark::State &state);
+    void EvaluatorTest_BGVEncryptExponentiateDecrypt(benchmark::State &state);
+    void EvaluatorTest_BGVEncryptAddManyDecrypt(benchmark::State &state);
+    void EvaluatorTest_TransformPlainToNTT(benchmark::State &state);
+    void EvaluatorTest_TransformEncryptedToFromNTT(benchmark::State &state);
+    void EvaluatorTest_BFVEncryptMultiplyPlainNTTDecrypt(benchmark::State &state);
+    void EvaluatorTest_BFVEncryptApplyGaloisDecrypt(benchmark::State &state);
+    void EvaluatorTest_BFVEncryptRotateMatrixDecrypt(benchmark::State &state);
+    void EvaluatorTest_BFVEncryptModSwitchToNextDecrypt(benchmark::State &state);
+    void EvaluatorTest_BFVEncryptModSwitchToDecrypt(benchmark::State &state);
+    void EvaluatorTest_BGVEncryptMultiplyPlainNTTDecrypt(benchmark::State &state);
+    void EvaluatorTest_BGVEncryptApplyGaloisDecrypt(benchmark::State &state);
+    void EvaluatorTest_BGVEncryptRotateMatrixDecrypt(benchmark::State &state);
+    void EvaluatorTest_BGVEncryptModSwitchToNextDecrypt(benchmark::State &state);
+    void EvaluatorTest_BGVEncryptModSwitchToDecrypt(benchmark::State &state);
+
+    // galoiskeys.cpp gtest2gbenchmark benchmark 
+    void GaloisKeysTest_GaloisKeysSaveLoad(benchmark::State &state);
+    void GaloisKeysTest_GaloisKeysSeededSaveLoad(benchmark::State &state);
+
+    // keygenerator.cpp gtest2gbenchmark benchmark 
+    void KeyGeneratorTest_BFVKeyGeneration(benchmark::State &state);
+    void KeyGeneratorTest_BGVKeyGeneration(benchmark::State &state);
+    void KeyGeneratorTest_CKKSKeyGeneration(benchmark::State &state);
+    void KeyGeneratorTest_Constructors(benchmark::State &state);
+
+    // memorymanager.cpp gtest2gbenchmark benchmark
+    void MemoryPoolHandleTest_MemoryPoolHandleConstructAssign(benchmark::State &state);
+    void MemoryPoolHandleTest_MemoryPoolHandleAllocate(benchmark::State &state);
+    void MemoryPoolHandleTest_UseCount(benchmark::State &state);
+
+    // modulus.cpp gtest2gbenchmark benchmark
+    void ModulusTest_CreateModulus(benchmark::State &state);
+    void ModulusTest_CompareModulus(benchmark::State &state);
+    void ModulusTest_SaveLoadModulus(benchmark::State &state);
+    void ModulusTest_Reduce(benchmark::State &state);
+    void CoeffModTest_CustomExceptionTest(benchmark::State &state);
+    void CoeffModTest_CustomTest(benchmark::State &state);
+
+    // plaintext.cpp gtest2gbenchmark benchmark
+    void PlaintextTest_PlaintextBasics(benchmark::State &state);
+    void PlaintextTest_FromSpan(benchmark::State &state);
+    void PlaintextTest_SaveLoadPlaintext(benchmark::State &state);
+
+    // publickey.cpp gtest2gbenchmark benchmark
+    void PublicKeyTest_SaveLoadPublicKey(benchmark::State &state);
+
+    // randomgen.cpp gtest2gbenchmark benchmark
+    void RandomGenerator_UniformRandomCreateDefault(benchmark::State &state);
+    void RandomGenerator_RandomGeneratorFactorySeed(benchmark::State &state);
+    void RandomGenerator_SequentialRandomGenerator(benchmark::State &state);
+    void RandomGenerator_RandomUInt64(benchmark::State &state);
+    void RandomGenerator_SeededRNG(benchmark::State &state);
+    void RandomGenerator_RandomSeededRNG(benchmark::State &state);
+    void RandomGenerator_MultiThreaded(benchmark::State &state);
+    void RandomGenerator_UniformRandomGeneratorInfo(benchmark::State &state);
+    void RandomGenerator_UniformRandomGeneratorInfoSaveLoad(benchmark::State &state);
+
+    // randomtostd.cpp gtest2gbenchmark benchmark
+    void RandomToStandard_RandomToStandardGenerate(benchmark::State &state);
+
+    // relinkeys.cpp gtest2gbenchmark benchmark
+    void RelinKeysTest_RelinKeysSaveLoad(benchmark::State &state);
+    void RelinKeysTest_RelinKeysSeededSaveLoad(benchmark::State &state);
+
+    // secretkey.cpp gtest2gbenchmark benchmark
+    void SecretKeyTest_SaveLoadSecretKey(benchmark::State &state);
+
+    // serialization.cpp gtest2gbenchmark benchmark
+    void SerializationTest_IsValidHeader(benchmark::State &state);
+    void SerializationTest_SEALHeaderSaveLoad(benchmark::State &state);
+    void SerializationTest_SaveLoadToStream(benchmark::State &state);
+    void SerializationTest_SaveLoadToBuffer(benchmark::State &state);
+
+    namespace util{
+    // util::clipnormal.cpp gtest2gbenchmark benchmark
+        void ClipNormal_ClipNormalGenerate(benchmark::State &state);
+
+    // util::common.cpp gtest2gbenchmark benchmark
+        void Common_Constants(benchmark::State &state);
+        void Common_UnsignedComparisons(benchmark::State &state);
+        void Common_SafeArithmetic(benchmark::State &state);
+        void Common_FitsIn(benchmark::State &state);
+        void Common_DivideRoundUp(benchmark::State &state);
+        void Common_HammingWeight(benchmark::State &state);
+        void Common_ReverseBits32(benchmark::State &state);
+        void Common_ReverseBits64(benchmark::State &state);
+        void Common_GetSignificantBitCount(benchmark::State &state);
+        void Common_GetMSBIndexGeneric(benchmark::State &state);
+
+    // util::galois.cpp gtest2gbenchmark benchmark
+        void GaloisToolTest_Create(benchmark::State &state);
+        void GaloisToolTest_EltFromStep(benchmark::State &state);
+        void GaloisToolTest_EltsFromSteps(benchmark::State &state);
+        void GaloisToolTest_EltsAll(benchmark::State &state);
+        void GaloisToolTest_IndexFromElt(benchmark::State &state);
+        void GaloisToolTest_ApplyGalois(benchmark::State &state);
+        void GaloisToolTest_ApplyGaloisNTT(benchmark::State &state);
+
+    // util::hash.cpp gtest2gbenchmark benchmark
+        void HashTest_Hash(benchmark::State &state);
+
+    // util::iterator.cpp gtest2gbenchmark benchmark
+        void IteratorTest_IterType(benchmark::State &state);
+        void IteratorTest_Iterate(benchmark::State &state);
+        void IteratorTest_SeqIter(benchmark::State &state);
+        void IteratorTest_PtrIter(benchmark::State &state);
+        void IteratorTest_StrideIter(benchmark::State &state);
+        void IteratorTest_RNSIter(benchmark::State &state);
+        void IteratorTest_PolyIter(benchmark::State &state);
+        void IteratorTest_IterTuple(benchmark::State &state);
+        void IteratorTest_ReverseIter(benchmark::State &state);
+
+    // util::locks.cpp gtest2gbenchmark benchmark
+        void ReaderWriterLockerTests_ReaderWriterLockNonBlocking(benchmark::State &state);
+        void ReaderWriterLockerTests_ReaderWriterLockBlocking(benchmark::State &state);
+
+    // util::mempool.cpp gtest2gbenchmark benchmark
+        void MemoryPoolTest_TestMemoryPoolMT(benchmark::State &state);
+        void MemoryPoolTests_PointerTestsMT(benchmark::State &state);
+        void MemoryPoolTests_TestMemoryPoolST(benchmark::State &state);
+        void MemoryPoolTests_PointerTestsST(benchmark::State &state);
+        void MemoryPoolTests_Allocate(benchmark::State &state);
+
+    // util::ntt.cpp gtest2gbenchmark benchmark
+        void NTTTablesTest_NTTBasics(benchmark::State &state);
+        void NTTTablesTest_NTTPrimitiveRootsTest(benchmark::State &state);
+        void NTTTablesTest_NegacyclicNTTTest(benchmark::State &state);
+        void NTTTablesTest_InverseNegacyclicNTTTest(benchmark::State &state);
+
+    // util::numth.cpp gtest2gbenchmark benchmark
+        void NumberTheory_GCD(benchmark::State &state);
+        void NumberTheory_ExtendedGCD(benchmark::State &state);
+        void NumberTheory_TryInvertUIntMod(benchmark::State &state);
+        void NumberTheory_IsPrime(benchmark::State &state);
+        void NumberTheory_NAF(benchmark::State &state);
+        void NumberTheory_TryPrimitiveRootMod(benchmark::State &state);
+        void NumberTheory_IsPrimitiveRootMod(benchmark::State &state);
+        void NumberTheory_TryMinimalPrimitiveRootMod(benchmark::State &state);
+
+    // util::polyarithsmallmod.cpp gtest2gbenchmark benchmark
+        void PolyArithSmallMod_ModuloPolyCoeffs(benchmark::State &state);
+        void PolyArithSmallMod_NegatePolyCoeffMod(benchmark::State &state);
+        void PolyArithSmallMod_AddPolyCoeffMod(benchmark::State &state);
+        void PolyArithSmallMod_SubPolyCoeffMod(benchmark::State &state);
+        void PolyArithSmallMod_MultiplyPolyScalarCoeffMod(benchmark::State &state);
+        void PolyArithSmallMod_MultiplyPolyMonoCoeffMod(benchmark::State &state);
+        void PolyArithSmallMod_DyadicProductCoeffMod(benchmark::State &state);
+        void PolyArithSmallMod_PolyInftyNormCoeffMod(benchmark::State &state);
+        void PolyArithSmallMod_NegacyclicShiftPolyCoeffMod(benchmark::State &state);
+
+    // util::polycore.cpp gtest2gbenchmark benchmark
+        void PolyCore_AllocatePoly(benchmark::State &state);
+        void PolyCore_SetZeroPoly(benchmark::State &state);
+        void PolyCore_AllocateZeroPoly(benchmark::State &state);
+        void PolyCore_AllocatePolyArray(benchmark::State &state);
+        void PolyCore_SetZeroPolyArray(benchmark::State &state);
+        void PolyCore_AllocateZeroPolyArray(benchmark::State &state);
+        void PolyCore_SetPoly(benchmark::State &state);
+        void PolyCore_SetPolyArray(benchmark::State &state);
+
+    // util::rns.cpp gtest2gbenchmark benchmark
+        void RNSBaseTest_Create(benchmark::State &state);
+        void RNSBaseTest_ArrayAccess(benchmark::State &state);
+        void RNSBaseTest_Copy(benchmark::State &state);
+        void RNSBaseTest_Contains(benchmark::State &state);
+        void RNSBaseTest_IsSubbaseOf(benchmark::State &state);
+        void RNSBaseTest_Extend(benchmark::State &state);
+        void RNSBaseTest_Drop(benchmark::State &state);
+        void RNSBaseTest_ComposeDecompose(benchmark::State &state);
+        void RNSBaseTest_ComposeDecomposeArray(benchmark::State &state);
+        void BaseConverterTest_Initialize(benchmark::State &state);
+        void BaseConverterTest_Convert(benchmark::State &state);
+        void BaseConverterTest_ConvertArray(benchmark::State &state);
+        void RNSToolTest_Initialize(benchmark::State &state);
+        void RNSToolTest_FastBConvMTilde(benchmark::State &state);
+        void RNSToolTest_MontgomeryReduction(benchmark::State &state);
+        void RNSToolTest_FastFloor(benchmark::State &state);
+        void RNSToolTest_FastBConvSK(benchmark::State &state);
+        void RNSToolTest_ExactScaleAndRound(benchmark::State &state);
+        void RNSToolTest_DivideAndRoundQLastInplace(benchmark::State &state);
+        void RNSToolTest_DivideAndRoundQLastNTTInplace(benchmark::State &state);
+
+    // util::stringtouint64.cpp gtest2gbenchmark benchmark
+        void StringToUInt64_IsHexCharTest(benchmark::State &state);
+        void StringToUInt64_HexToNibbleTest(benchmark::State &state);
+        void StringToUInt64_GetHexStringBitCount(benchmark::State &state);
+        void StringToUInt64_HexStringToUInt64(benchmark::State &state);
+
+    // util::uint64tostring.cpp gtest2gbenchmark benchmark
+        void UInt64ToString_NibbleToUpperHexTest(benchmark::State &state);
+        void UInt64ToString_UInt64ToHexString(benchmark::State &state);
+        void UInt64ToString_UInt64ToDecString(benchmark::State &state);
+        void UInt64ToString_PolyToHexString(benchmark::State &state);
+
+    // util::uintarith.cpp gtest2gbenchmark benchmark
+        void UIntArith_AddUInt64Generic(benchmark::State &state);
+        void UIntArith_AddUInt64(benchmark::State &state);
+        void UIntArith_SubUInt64Generic(benchmark::State &state);
+        void UIntArith_SubUInt64(benchmark::State &state);
+        void UIntArith_AddUInt128(benchmark::State &state);
+        void UIntArith_AddUInt(benchmark::State &state);
+        void UIntArith_SubUInt(benchmark::State &state);
+        void UIntArith_AddUIntUInt64(benchmark::State &state);
+        void UIntArith_SubUIntUInt64(benchmark::State &state);
+        void UIntArith_IncrementUInt(benchmark::State &state);
+        void UIntArith_DecrementUInt(benchmark::State &state);
+        void UIntArith_NegateUInt(benchmark::State &state);
+        void UIntArith_LeftShiftUInt(benchmark::State &state);
+        void UIntArith_LeftShiftUInt128(benchmark::State &state);
+        void UIntArith_LeftShiftUInt192(benchmark::State &state);
+        void UIntArith_RightShiftUInt(benchmark::State &state);
+        void UIntArith_RightShiftUInt128(benchmark::State &state);
+        void UIntArith_RightShiftUInt192(benchmark::State &state);
+        void UIntArith_HalfRoundUpUInt(benchmark::State &state);
+        void UIntArith_NotUInt(benchmark::State &state);
+        void UIntArith_AndUInt(benchmark::State &state);
+        void UIntArith_OrUInt(benchmark::State &state);
+        void UIntArith_XorUInt(benchmark::State &state);
+        void UIntArith_MultiplyUInt64Generic(benchmark::State &state);
+        void UIntArith_MultiplyUInt64(benchmark::State &state);
+        void UIntArith_MultiplyUInt64HW64Generic(benchmark::State &state);
+        void UIntArith_MultiplyUInt64HW64(benchmark::State &state);
+        void UIntArith_MultiplyManyUInt64(benchmark::State &state);
+        void UIntArith_MultiplyManyUInt64Except(benchmark::State &state);
+        void UIntArith_MultiplyUInt(benchmark::State &state);
+        void UIntArith_MultiplyUIntUInt64(benchmark::State &state);
+        void UIntArith_DivideUInt(benchmark::State &state);
+        void UIntArith_DivideUInt128UInt64(benchmark::State &state);
+        void UIntArith_DivideUInt192UInt64(benchmark::State &state);
+        void UIntArith_ExponentiateUInt64(benchmark::State &state);
+
+    // util::uintarithmod.cpp gtest2gbenchmark benchmark
+        void UIntArithMod_IncrementUIntMod(benchmark::State &state);
+        void UIntArithMod_DecrementUIntMod(benchmark::State &state);
+        void UIntArithMod_NegateUIntMod(benchmark::State &state);
+        void UIntArithMod_Div2UIntMod(benchmark::State &state);
+        void UIntArithMod_AddUIntMod(benchmark::State &state);
+        void UIntArithMod_SubUIntMod(benchmark::State &state);
+        void UIntArithMod_TryInvertUIntMod(benchmark::State &state);
+
+    // util::uintarithsmallmod.cpp gtest2gbenchmark benchmark
+        void UIntArithSmallMod_IncrementUIntMod(benchmark::State &state);
+        void UIntArithSmallMod_DecrementUIntMod(benchmark::State &state);
+        void UIntArithSmallMod_NegateUIntMod(benchmark::State &state);
+        void UIntArithSmallMod_Div2UIntMod(benchmark::State &state);
+        void UIntArithSmallMod_AddUIntMod(benchmark::State &state);
+        void UIntArithSmallMod_SubUIntMod(benchmark::State &state);
+        void UIntArithSmallMod_BarrettReduce128(benchmark::State &state);
+        void UIntArithSmallMod_MultiplyUIntMod(benchmark::State &state);
+        void UIntArithSmallMod_MultiplyAddMod(benchmark::State &state);
+        void UIntArithSmallMod_ModuloUIntMod(benchmark::State &state);
+        void UIntArithSmallMod_TryInvertUIntMod(benchmark::State &state);
+        void UIntArithSmallMod_ExponentiateUIntMod(benchmark::State &state);
+        void UIntArithSmallMod_DotProductMod(benchmark::State &state);
+        void UIntArithSmallMod_MultiplyUIntModOperand(benchmark::State &state);
+        void UIntArithSmallMod_MultiplyUIntMod2(benchmark::State &state);
+        void UIntArithSmallMod_MultiplyUIntModLazy(benchmark::State &state);
+        void UIntArithSmallMod_MultiplyAddMod2(benchmark::State &state);
+
+    // util::uintcore.cpp gtest2gbenchmark benchmark
+        void UIntCore_AllocateUInt(benchmark::State &state);
+        void UIntCore_SetZeroUInt(benchmark::State &state);
+        void UIntCore_AllocateZeroUInt(benchmark::State &state);
+        void UIntCore_SetUInt(benchmark::State &state);
+        void UIntCore_SetUInt2(benchmark::State &state);
+        void UIntCore_SetUInt3(benchmark::State &state);
+        void UIntCore_IsZeroUInt(benchmark::State &state);
+        void UIntCore_IsEqualUInt(benchmark::State &state);
+        void UIntCore_IsBitSetUInt(benchmark::State &state);
+        void UIntCore_IsHighBitSetUInt(benchmark::State &state);
+        void UIntCore_SetBitUInt(benchmark::State &state);
+        void UIntCore_GetSignificantBitCountUInt(benchmark::State &state);
+        void UIntCore_GetSignificantUInt64CountUInt(benchmark::State &state);
+        void UIntCore_GetNonzeroUInt64CountUInt(benchmark::State &state);
+        void UIntCore_FilterHighBitsUInt(benchmark::State &state);
+        void UIntCore_CompareUInt(benchmark::State &state);
+        void UIntCore_GetPowerOfTwo(benchmark::State &state);
+        void UIntCore_DuplicateUIntIfNeeded(benchmark::State &state);
+    }
+
+}

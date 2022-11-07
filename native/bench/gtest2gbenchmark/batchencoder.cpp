@@ -9,21 +9,24 @@
 #include "gtest/gtest.h"
 #include "seal/seal.h"
 #include "seal/util/rlwe.h"
-#include "bench.h"
+#include "../bench.h"
 
 
 using namespace seal;
 using namespace seal::util;
 using namespace std;
 using namespace benchmark;
-using namespace sealbench;
+using namespace gtest2gbenchmark;
 
-namespace sealbench
+namespace gtest2gbenchmark
 {
     void BatchEncoderTest_BatchUnbatchUIntVector(State &state){
+        
+        
         for (auto _ : state)
         {
             state.PauseTiming();
+            state.ResumeTiming();
 
             EncryptionParameters parms(scheme_type::bfv);
             parms.set_poly_modulus_degree(64);
@@ -40,7 +43,7 @@ namespace sealbench
             {
                 plain_vec.push_back(i);
             }
-
+            
             Plaintext plain;
             batch_encoder.encode(plain_vec, plain);
             vector<uint64_t> plain_vec2;
@@ -74,62 +77,69 @@ namespace sealbench
             {
                 ASSERT_EQ(0ULL, short_plain_vec2[i]);
             }
-
-            state.ResumeTiming();
+            
+            
         }
+
+        
+    }
+    void  BatchEncoderTest_BatchUnbatchIntVector(State &state){
+        for (auto _ : state)
+        {
+            state.PauseTiming();
+            state.ResumeTiming();
+            EncryptionParameters parms(scheme_type::bfv);
+            parms.set_poly_modulus_degree(64);
+            parms.set_coeff_modulus(CoeffModulus::Create(64, { 60 }));
+            parms.set_plain_modulus(257);
+
+            SEALContext context(parms, false, sec_level_type::none);
+            ASSERT_TRUE(context.first_context_data()->qualifiers().using_batching);
+
+            BatchEncoder batch_encoder(context);
+            ASSERT_EQ(64ULL, batch_encoder.slot_count());
+            vector<int64_t> plain_vec;
+            for (uint64_t i = 0; i < static_cast<uint64_t>(batch_encoder.slot_count()); i++)
+            {
+                plain_vec.push_back(static_cast<int64_t>(i * (1 - (i & 1) * 2)));
+            }
+
+            Plaintext plain;
+            batch_encoder.encode(plain_vec, plain);
+            vector<int64_t> plain_vec2;
+            batch_encoder.decode(plain, plain_vec2);
+            ASSERT_TRUE(plain_vec == plain_vec2);
+
+            for (size_t i = 0; i < batch_encoder.slot_count(); i++)
+            {
+                plain_vec[i] = -5;
+            }
+            batch_encoder.encode(plain_vec, plain);
+            ASSERT_TRUE(plain.to_string() == "FC");
+            batch_encoder.decode(plain, plain_vec2);
+            ASSERT_TRUE(plain_vec == plain_vec2);
+
+            vector<int64_t> short_plain_vec;
+            for (int64_t i = 0; i < 20; i++)
+            {
+                short_plain_vec.push_back(i * (int64_t(1) - (i & 1) * 2));
+            }
+            batch_encoder.encode(short_plain_vec, plain);
+            vector<int64_t> short_plain_vec2;
+            batch_encoder.decode(plain, short_plain_vec2);
+            ASSERT_EQ(20ULL, short_plain_vec.size());
+            ASSERT_EQ(64ULL, short_plain_vec2.size());
+            for (size_t i = 0; i < 20; i++)
+            {
+                ASSERT_EQ(short_plain_vec[i], short_plain_vec2[i]);
+            }
+            for (size_t i = 20; i < batch_encoder.slot_count(); i++)
+            {
+                ASSERT_EQ(0ULL, short_plain_vec2[i]);
+            }
+        }
+        
+    }
     
 }
 
-    // TEST(BatchEncoderTest, BatchUnbatchIntVector)
-    // {
-    //     EncryptionParameters parms(scheme_type::bfv);
-    //     parms.set_poly_modulus_degree(64);
-    //     parms.set_coeff_modulus(CoeffModulus::Create(64, { 60 }));
-    //     parms.set_plain_modulus(257);
-
-    //     SEALContext context(parms, false, sec_level_type::none);
-    //     ASSERT_TRUE(context.first_context_data()->qualifiers().using_batching);
-
-    //     BatchEncoder batch_encoder(context);
-    //     ASSERT_EQ(64ULL, batch_encoder.slot_count());
-    //     vector<int64_t> plain_vec;
-    //     for (uint64_t i = 0; i < static_cast<uint64_t>(batch_encoder.slot_count()); i++)
-    //     {
-    //         plain_vec.push_back(static_cast<int64_t>(i * (1 - (i & 1) * 2)));
-    //     }
-
-    //     Plaintext plain;
-    //     batch_encoder.encode(plain_vec, plain);
-    //     vector<int64_t> plain_vec2;
-    //     batch_encoder.decode(plain, plain_vec2);
-    //     ASSERT_TRUE(plain_vec == plain_vec2);
-
-    //     for (size_t i = 0; i < batch_encoder.slot_count(); i++)
-    //     {
-    //         plain_vec[i] = -5;
-    //     }
-    //     batch_encoder.encode(plain_vec, plain);
-    //     ASSERT_TRUE(plain.to_string() == "FC");
-    //     batch_encoder.decode(plain, plain_vec2);
-    //     ASSERT_TRUE(plain_vec == plain_vec2);
-
-    //     vector<int64_t> short_plain_vec;
-    //     for (int64_t i = 0; i < 20; i++)
-    //     {
-    //         short_plain_vec.push_back(i * (int64_t(1) - (i & 1) * 2));
-    //     }
-    //     batch_encoder.encode(short_plain_vec, plain);
-    //     vector<int64_t> short_plain_vec2;
-    //     batch_encoder.decode(plain, short_plain_vec2);
-    //     ASSERT_EQ(20ULL, short_plain_vec.size());
-    //     ASSERT_EQ(64ULL, short_plain_vec2.size());
-    //     for (size_t i = 0; i < 20; i++)
-    //     {
-    //         ASSERT_EQ(short_plain_vec[i], short_plain_vec2[i]);
-    //     }
-    //     for (size_t i = 20; i < batch_encoder.slot_count(); i++)
-    //     {
-    //         ASSERT_EQ(0ULL, short_plain_vec2[i]);
-    //     }
-    // }
-} // namespace sealtest

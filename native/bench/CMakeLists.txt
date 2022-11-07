@@ -57,9 +57,11 @@ if(SEAL_BUILD_BENCH)
     endif()
 
     add_executable(sealbench)
+    add_executable(gtest2gbenchmark)
     # If we're targeting WASM, add the appropriate link flags
     if(EMSCRIPTEN)
         set_target_properties(sealbench PROPERTIES LINK_FLAGS "-flto -O3 -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 -s MAXIMUM_MEMORY=4GB")
+        set_target_properties(gtest2gbenchmark PROPERTIES LINK_FLAGS "-flto -O3 -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 -s MAXIMUM_MEMORY=4GB")
     endif()
     target_sources(sealbench
         PRIVATE
@@ -69,15 +71,59 @@ if(SEAL_BUILD_BENCH)
             ${CMAKE_CURRENT_LIST_DIR}/bfv.cpp
             ${CMAKE_CURRENT_LIST_DIR}/bgv.cpp
             ${CMAKE_CURRENT_LIST_DIR}/ckks.cpp
-            ${CMAKE_CURRENT_LIST_DIR}/batchencoderbench.cpp
+    )
+    target_sources(gtest2gbenchmark
+        PRIVATE
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/gtest2gbenchmark.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/batchencoder.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/ciphertext.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/ckks.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/context.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/encryptionparams.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/encryptor.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/evaluator.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/galoiskeys.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/dynarray.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/keygenerator.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/memorymanager.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/modulus.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/plaintext.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/publickey.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/randomgen.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/randomtostd.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/relinkeys.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/secretkey.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/serialization.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/util/clipnormal.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/util/common.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/util/galois.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/util/hash.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/util/iterator.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/util/locks.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/util/mempool.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/util/numth.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/util/polyarithsmallmod.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/util/polycore.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/util/rns.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/util/ntt.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/util/stringtouint64.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/util/uint64tostring.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/util/uintarith.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/util/uintarithmod.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/util/uintarithsmallmod.cpp
+            ${CMAKE_CURRENT_LIST_DIR}/gtest2gbenchmark/util/uintcore.cpp
     )
 
     if(TARGET SEAL::seal)
         target_link_libraries(sealbench PRIVATE SEAL::seal GTest::gtest)
         target_link_libraries(sealbench PRIVATE SEAL::seal benchmark::benchmark)
+        target_link_libraries(gtest2gbenchmark PRIVATE SEAL::seal GTest::gtest)
+        target_link_libraries(gtest2gbenchmark PRIVATE SEAL::seal benchmark::benchmark)
     elseif(TARGET SEAL::seal_shared)
         target_link_libraries(sealbench PRIVATE SEAL::seal_shared benchmark::benchmark)
         target_link_libraries(sealbench PRIVATE SEAL::seal_shared GTest::gtest)
+        target_link_libraries(gtest2gbenchmark PRIVATE SEAL::seal_shared benchmark::benchmark)
+        target_link_libraries(gtest2gbenchmark PRIVATE SEAL::seal_shared GTest::gtest)
     else()
         message(FATAL_ERROR "Cannot find target SEAL::seal or SEAL::seal_shared")
     endif()
